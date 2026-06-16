@@ -11,8 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Quicksand:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Tone.js untuk sintesis suara backsound -->
-    <script src="weddingnasheed.mp3"></script>
+    <!-- Menggunakan tag audio HTML standar daripada Tone.js -->
 
     <script>
         tailwind.config = {
@@ -361,20 +360,20 @@
                 
                 <div class="mb-4 mt-2">
                     <label class="block text-sm font-bold mb-1">Nama Anda</label>
-                    <input type="text" id="namaPengirim" class="w-full bg-paper paper-border p-2 focus:outline-none focus:ring-2 ring-primary" required>
+                    <input type="text" id="namaPengirim" name="nama" class="w-full bg-paper paper-border p-2 focus:outline-none focus:ring-2 ring-primary" required>
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-bold mb-1">Pesan & Doa</label>
-                    <textarea id="pesanDoa" rows="3" class="w-full bg-paper paper-border p-2 focus:outline-none focus:ring-2 ring-primary" required></textarea>
+                    <textarea id="pesanDoa" name="pesan" rows="3" class="w-full bg-paper paper-border p-2 focus:outline-none focus:ring-2 ring-primary" required></textarea>
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-bold mb-1">Kehadiran</label>
-                    <select class="w-full bg-paper paper-border p-2 focus:outline-none">
-                        <option>Hadir</option>
-                        <option>Maaf, Tidak Bisa Hadir</option>
+                    <select id="statusKehadiran" name="kehadiran" class="w-full bg-paper paper-border p-2 focus:outline-none">
+                        <option value="Hadir">Hadir</option>
+                        <option value="Maaf, Tidak Bisa Hadir">Maaf, Tidak Bisa Hadir</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full bg-primary text-white font-bold py-3 paper-border shadow-paper-sm hover:translate-y-1 transition transform rotate-1">
+                <button id="btn-submit-rsvp" type="submit" class="w-full bg-primary text-white font-bold py-3 paper-border shadow-paper-sm hover:translate-y-1 transition transform rotate-1">
                     Kirim Ucapan
                 </button>
             </form>
@@ -392,7 +391,7 @@
         <footer class="text-center py-10 bg-dark text-paper border-t-4 border-dashed border-paper/50">
             <h2 class="font-hand text-4xl mb-2">Terima Kasih</h2>
             <p class="text-sm font-medium mb-6">Atas doa & restu Bapak/Ibu/Saudara/i</p>
-            <p class="font-hand text-2xl text-accent">Rani & Fauzul</p>
+            <p class="font-hand text-2xl text-accent">Rani & Rani</p>
             
             <div class="mt-8 pt-4 border-t border-paper/20">
                 <p class="text-xs font-medium">Desain Undangan Digital oleh</p>
@@ -402,6 +401,11 @@
             </div>
         </footer>
     </div>
+
+    <!-- Audio Element (Ganti src dengan path file musik Anda) -->
+    <audio id="bg-music" loop>
+        <source src="weddingnasheed.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- Floating Music Button -->
     <button id="music-btn" onclick="toggleMusic()" class="fixed bottom-24 right-6 w-12 h-12 bg-primary text-white rounded-full paper-border shadow-paper z-[55] flex items-center justify-center hidden">
@@ -448,7 +452,6 @@
         }
 
         // 2. Buka Undangan Animasi & Play Musik
-        let audioInitialized = false;
         function bukaUndangan() {
             // Sembunyikan cover
             document.getElementById('cover-page').classList.add('slide-up');
@@ -465,51 +468,31 @@
             document.getElementById('music-btn').classList.remove('hidden');
             document.getElementById('bottom-nav').classList.remove('hidden');
             
-            // Inisialisasi Audio Islami Ambient (Tone.js) jika belum
-            if(!audioInitialized){
-                initToneAudio();
-                audioInitialized = true;
-            }
+            // Play musik otomatis saat undangan dibuka
+            const music = document.getElementById('bg-music');
+            music.play().then(() => {
+                isPlaying = true;
+                const icon = document.getElementById('music-icon');
+                icon.className = "fas fa-compact-disc animate-spin";
+                document.getElementById('music-btn').style.animation = "pulse 2s infinite";
+            }).catch(error => {
+                console.log("Autoplay dicegah oleh browser (Interaksi tambahan dibutuhkan).");
+            });
         }
 
-        // 3. Sintesis Audio Ambient Islami (Tone.js)
+        // 3. Kontrol Musik (Audio Tag)
         let isPlaying = false;
-        async function initToneAudio() {
-            await Tone.start();
-            
-            // Membuat synth yang lembut (seperti pad/kecapi ambient)
-            const synth = new Tone.PolySynth(Tone.Synth, {
-                oscillator: { type: "sine" },
-                envelope: { attack: 1, decay: 0.1, sustain: 0.8, release: 3 }
-            }).toDestination();
-            synth.volume.value = -12; // Volume rendah agar tidak mengganggu
-
-            // Skala Hijaz (sering digunakan di nada Timur Tengah/Islami)
-            // D, Eb, F#, G, A, Bb, C
-            const notes = ["D4", "A4", "Eb4", "D4", "G4", "F#4", "D4"];
-            let index = 0;
-
-            // Loop nada secara lambat
-            Tone.Transport.scheduleRepeat(time => {
-                let note = notes[index % notes.length];
-                synth.triggerAttackRelease(note, "2n", time);
-                index++;
-            }, "1m"); // Setiap 1 measure (lambat)
-
-            Tone.Transport.bpm.value = 60; // Tempo sangat lambat dan tenang
-            Tone.Transport.start();
-            isPlaying = true;
-        }
-
         function toggleMusic() {
+            const music = document.getElementById('bg-music');
             const icon = document.getElementById('music-icon');
+            
             if(isPlaying) {
-                Tone.Transport.pause();
+                music.pause();
                 icon.classList.remove('animate-spin');
                 icon.className = "fas fa-play";
                 document.getElementById('music-btn').style.animation = "none";
             } else {
-                Tone.Transport.start();
+                music.play();
                 icon.className = "fas fa-compact-disc animate-spin";
                 document.getElementById('music-btn').style.animation = "pulse 2s infinite";
             }
@@ -563,13 +546,47 @@
             }, 3000);
         }
 
-        // 6. Form RSVP Palsu (Front-end Only)
+        // 6. Form RSVP Terhubung ke Google Spreadsheet (Apps Script)
         function kirimUcapan(e) {
             e.preventDefault();
+            const btn = document.getElementById('btn-submit-rsvp');
+            const originalBtnText = btn.innerText;
+            
             const nama = document.getElementById('namaPengirim').value;
             const pesan = document.getElementById('pesanDoa').value;
-            const select = e.target.querySelector('select').value;
+            const select = document.getElementById('statusKehadiran').value;
             
+            // Ubah teks tombol menjadi loading
+            btn.innerText = 'Mengirim...';
+            btn.disabled = true;
+
+            // --- PENTING: GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA ---
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwQ2ygFexx3FAcc2vcw3-Vs-J7OTymzOaSFq6k6VceNUwXlSk-KXzqYarXPYDpTst2Zhg/exec';
+            
+            // (Hanya untuk keperluan preview di Canvas, jika URL belum diganti maka pakai animasi palsu)
+            if(scriptURL === 'https://script.google.com/macros/s/AKfycbwQ2ygFexx3FAcc2vcw3-Vs-J7OTymzOaSFq6k6VceNUwXlSk-KXzqYarXPYDpTst2Zhg/exec') {
+                setTimeout(() => updateUIRsvp(nama, pesan, select, btn, originalBtnText), 1000);
+                return;
+            }
+
+            // Proses kirim ke Google Apps Script menggunakan FormData
+            const form = document.getElementById('rsvp-form');
+            const formData = new FormData(form);
+
+            fetch(scriptURL, { method: 'POST', body: formData})
+                .then(response => {
+                    updateUIRsvp(nama, pesan, select, btn, originalBtnText);
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    btn.innerText = originalBtnText;
+                    btn.disabled = false;
+                    showToast("Gagal mengirim pesan. Silakan coba lagi.");
+                });
+        }
+
+        // Fungsi Bantuan Update UI RSVP
+        function updateUIRsvp(nama, pesan, select, btn, originalBtnText) {
             const badgeClass = select === 'Hadir' ? 'bg-secondary text-white' : 'bg-gray-400 text-white';
             
             const newHtml = `
@@ -582,7 +599,9 @@
             const daftar = document.getElementById('daftar-ucapan');
             daftar.insertAdjacentHTML('afterbegin', newHtml);
             
-            document.getElementById('pesanDoa').value = '';
+            document.getElementById('rsvp-form').reset();
+            btn.innerText = originalBtnText;
+            btn.disabled = false;
             showToast("Terima kasih atas ucapan Anda!");
         }
 
