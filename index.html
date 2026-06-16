@@ -196,7 +196,7 @@
             <div class="bg-white p-3 paper-border shadow-paper mb-10 transform -rotate-2 relative reveal">
                 <div class="paper-pin" style="top: 10px; left: 10px;"></div>
                 <div class="h-48 bg-gray-200 paper-border-dashed mb-4 overflow-hidden">
-                    <img src="https://placehold.co/300x400/2D2A26/ffffff?text=Fauzul" alt="Fauzul" class="w-full h-full object-cover grayscale">
+                    <img src="https://placehold.co/300x400/2D2A26/ffffff?text=Rani" alt="Rani" class="w-full h-full object-cover grayscale">
                 </div>
                 <h3 class="font-hand text-4xl font-bold text-dark text-center">Rani Safitri</h3>
                 <p class="text-center text-sm font-bold text-primary mt-1">Anak dari Bpk. Fulan dan Ibu Fulanah</p>
@@ -206,7 +206,7 @@
             <div class="bg-white p-3 paper-border shadow-paper transform rotate-2 relative reveal">
                 <div class="washi-tape pink" style="top: -10px; left: 50%; transform: translateX(-50%) rotate(3deg);"></div>
                 <div class="h-48 bg-gray-200 paper-border-dashed mb-4 overflow-hidden mt-2">
-                    <img src="https://placehold.co/300x400/D97757/ffffff?text=Rani" alt="Rani" class="w-full h-full object-cover grayscale">
+                    <img src="https://placehold.co/300x400/D97757/ffffff?text=Fauzul" alt="Fauzul" class="w-full h-full object-cover grayscale">
                 </div>
                 <h3 class="font-hand text-4xl font-bold text-dark text-center">Fauzul Fikram</h3>
                 <p class="text-center text-sm font-bold text-secondary mt-1">Anak dari Bpk. Fulan dan Ibu Fulanah</p>
@@ -373,6 +373,15 @@
                         <option value="Maaf, Tidak Bisa Hadir">Maaf, Tidak Bisa Hadir</option>
                     </select>
                 </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold mb-1">Jumlah Tamu</label>
+                    <select id="jumlahTamu" name="guests" class="w-full bg-paper paper-border p-2 focus:outline-none">
+                        <option value="1">1 Orang</option>
+                        <option value="2">2 Orang</option>
+                        <option value="3">3 Orang</option>
+                        <option value="4">4 Orang</option>
+                    </select>
+                </div>
                 <button id="btn-submit-rsvp" type="submit" class="w-full bg-primary text-white font-bold py-3 paper-border shadow-paper-sm hover:translate-y-1 transition transform rotate-1">
                     Kirim Ucapan
                 </button>
@@ -380,9 +389,8 @@
 
             <!-- List Ucapan -->
             <div id="daftar-ucapan" class="space-y-4 max-h-80 overflow-y-auto p-2 reveal">
-                <div class="bg-kraft p-3 paper-border-dashed transform rotate-1">
-                    <p class="font-bold text-sm">Mz Digital <span class="text-xs font-normal text-gray-600 bg-white px-1 ml-1 border border-dark">Hadir</span></p>
-                    <p class="text-sm mt-1">Selamat menempuh hidup baru Rani dan Fauzul. Semoga menjadi keluarga yang Sakinah, Mawaddah, Warahmah. Amin!</p>
+                <div class="text-center text-sm text-gray-500 py-4" id="loading-ucapan">
+                    <i class="fas fa-spinner fa-spin mr-2"></i> Memuat daftar ucapan...
                 </div>
             </div>
         </section>
@@ -404,7 +412,7 @@
 
     <!-- Audio Element (Ganti src dengan path file musik Anda) -->
     <audio id="bg-music" loop>
-        <source src="weddingnasheed.mp3" type="audio/mpeg">
+        <source src="./assets/music/backsound-islami.mp3" type="audio/mpeg">
     </audio>
 
     <!-- Floating Music Button -->
@@ -478,6 +486,9 @@
             }).catch(error => {
                 console.log("Autoplay dicegah oleh browser (Interaksi tambahan dibutuhkan).");
             });
+
+            // Memuat daftar ucapan dari Spreadsheet saat undangan dibuka
+            loadUcapan();
         }
 
         // 3. Kontrol Musik (Audio Tag)
@@ -547,6 +558,9 @@
         }
 
         // 6. Form RSVP Terhubung ke Google Spreadsheet (Apps Script)
+        // --- PENTING: GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA ---
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwFYSGJ7xEkfOFhJyU_KsBHuFX6bJ6KeLLb87ajqy-A3abWZv9bqUUik6TYshycGnfsOA/exec';
+
         function kirimUcapan(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-rsvp');
@@ -555,54 +569,92 @@
             const nama = document.getElementById('namaPengirim').value;
             const pesan = document.getElementById('pesanDoa').value;
             const select = document.getElementById('statusKehadiran').value;
+            const guests = document.getElementById('jumlahTamu').value;
             
             // Ubah teks tombol menjadi loading
             btn.innerText = 'Mengirim...';
             btn.disabled = true;
 
-            // --- PENTING: GANTI URL DI BAWAH INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA ---
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbwQ2ygFexx3FAcc2vcw3-Vs-J7OTymzOaSFq6k6VceNUwXlSk-KXzqYarXPYDpTst2Zhg/exec';
-            
-            // (Hanya untuk keperluan preview di Canvas, jika URL belum diganti maka pakai animasi palsu)
-            if(scriptURL === 'https://script.google.com/macros/s/AKfycbwQ2ygFexx3FAcc2vcw3-Vs-J7OTymzOaSFq6k6VceNUwXlSk-KXzqYarXPYDpTst2Zhg/exec') {
-                setTimeout(() => updateUIRsvp(nama, pesan, select, btn, originalBtnText), 1000);
+            // (Hanya untuk preview jika URL belum diganti)
+            if(!scriptURL.startsWith('http')) {
+                setTimeout(() => updateUIRsvp(btn, originalBtnText), 1000);
                 return;
             }
 
-            // Proses kirim ke Google Apps Script menggunakan FormData
-            const form = document.getElementById('rsvp-form');
-            const formData = new FormData(form);
+            // Proses kirim menggunakan format JSON sesuai doPost Apps Script Anda
+            const payload = {
+                name: nama,
+                message: pesan,
+                attendance: select,
+                guests: guests
+            };
 
-            fetch(scriptURL, { method: 'POST', body: formData})
-                .then(response => {
-                    updateUIRsvp(nama, pesan, select, btn, originalBtnText);
-                })
-                .catch(error => {
-                    console.error('Error!', error.message);
-                    btn.innerText = originalBtnText;
-                    btn.disabled = false;
-                    showToast("Gagal mengirim pesan. Silakan coba lagi.");
-                });
+            // Gunakan text/plain dengan stringify agar ditangkap sebagai e.postData.contents
+            fetch(scriptURL, { 
+                method: 'POST',
+                mode: 'no-cors', // Penting agar tidak kena blokir CORS policy
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                updateUIRsvp(btn, originalBtnText);
+                // Muat ulang daftar ucapan untuk menampilkan data terbaru
+                setTimeout(loadUcapan, 1500); 
+            })
+            .catch(error => {
+                console.error('Error!', error.message);
+                btn.innerText = originalBtnText;
+                btn.disabled = false;
+                showToast("Gagal mengirim pesan. Silakan coba lagi.");
+            });
         }
 
         // Fungsi Bantuan Update UI RSVP
-        function updateUIRsvp(nama, pesan, select, btn, originalBtnText) {
-            const badgeClass = select === 'Hadir' ? 'bg-secondary text-white' : 'bg-gray-400 text-white';
-            
-            const newHtml = `
-                <div class="bg-white p-3 paper-border-dashed transform ${Math.random() > 0.5 ? 'rotate-1' : '-rotate-1'} transition animate-[pulse_0.5s_ease-in-out]">
-                    <p class="font-bold text-sm text-dark">${nama} <span class="text-xs font-normal ${badgeClass} px-1 ml-1 border border-dark">${select}</span></p>
-                    <p class="text-sm mt-1">${pesan}</p>
-                </div>
-            `;
-            
-            const daftar = document.getElementById('daftar-ucapan');
-            daftar.insertAdjacentHTML('afterbegin', newHtml);
-            
+        function updateUIRsvp(btn, originalBtnText) {
             document.getElementById('rsvp-form').reset();
             btn.innerText = originalBtnText;
             btn.disabled = false;
             showToast("Terima kasih atas ucapan Anda!");
+        }
+
+        // Fungsi Load Ucapan (Sesuai doGet Apps Script Anda)
+        function loadUcapan() {
+            if(!scriptURL.startsWith('http')) {
+                document.getElementById('daftar-ucapan').innerHTML = `
+                    <div class="bg-kraft p-3 paper-border-dashed transform rotate-1">
+                        <p class="font-bold text-sm">Mz Digital <span class="text-xs font-normal text-gray-600 bg-white px-1 ml-1 border border-dark">Hadir</span></p>
+                        <p class="text-sm mt-1">Data belum bisa dimuat. Silakan ganti scriptURL dengan link Apps Script Anda terlebih dahulu.</p>
+                    </div>`;
+                return;
+            }
+
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    const daftar = document.getElementById('daftar-ucapan');
+                    daftar.innerHTML = ''; 
+                    
+                    // Membalik urutan agar yang terbaru tampil di atas
+                    data.reverse().forEach(item => {
+                        const badgeClass = item.attendance === 'Hadir' ? 'bg-secondary text-white' : 'bg-gray-400 text-white';
+                        const newHtml = `
+                            <div class="bg-white p-3 paper-border-dashed transform ${Math.random() > 0.5 ? 'rotate-1' : '-rotate-1'} transition mb-3">
+                                <p class="font-bold text-sm text-dark">${item.name} <span class="text-xs font-normal ${badgeClass} px-1 ml-1 border border-dark">${item.attendance}</span></p>
+                                <p class="text-sm mt-1">${item.message}</p>
+                                <p class="text-[10px] text-gray-500 mt-2">
+                                    ${new Date(item.timestamp).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})} • ${item.guests} Tamu
+                                </p>
+                            </div>
+                        `;
+                        daftar.insertAdjacentHTML('beforeend', newHtml);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('daftar-ucapan').innerHTML = '<p class="text-center text-sm text-red-500">Gagal memuat daftar ucapan.</p>';
+                });
         }
 
         // 7. Scroll Animations (Intersection Observer)
