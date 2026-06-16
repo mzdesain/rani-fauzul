@@ -115,12 +115,14 @@
         /* Scroll Animations */
         .reveal {
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            filter: blur(5px); /* Menambahkan blur awal */
+            transform: translateY(60px); /* Meningkatkan jarak gerakan dari 30px menjadi 60px */
+            transition: all 1s ease-out; /* Memperlambat durasi dari 0.8s menjadi 1s */
         }
 
         .reveal.active {
             opacity: 1;
+            filter: blur(0); /* Menghilangkan blur saat aktif */
             transform: translateY(0);
         }
 
@@ -140,7 +142,7 @@
             <div class="washi-tape pink" style="top: -10px; left: 50%; transform: translateX(-50%) rotate(-2deg);"></div>
             
             <p class="font-bold tracking-widest text-sm text-secondary mb-2 uppercase">The Wedding Of</p>
-            <h1 class="font-hand text-6xl text-dark mb-4">Fauzul & Rani</h1>
+            <h1 class="font-hand text-6xl text-dark mb-4">Rani & Fauzul</h1>
             
             <div class="my-6 border-y-2 border-dashed border-dark py-4">
                 <p class="text-sm font-bold mb-1">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
@@ -168,7 +170,7 @@
             <img src="https://placehold.co/400x400/739E82/ffffff?text=F+%26+R" class="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-multiply" alt="Couple">
             <div class="relative z-10 text-center bg-white/80 backdrop-blur-sm p-4 paper-border shadow-paper transform rotate-2">
                 <div class="paper-pin" style="top: 5px; left: 50%; transform: translateX(-50%);"></div>
-                <h2 class="font-hand text-5xl text-dark mt-2">Fauzul & Rani</h2>
+                <h2 class="font-hand text-5xl text-dark mt-2">Rani & Fauzul</h2>
                 <p class="font-bold text-sm">21 Juni 2026</p>
             </div>
         </div>
@@ -197,7 +199,7 @@
                 <div class="h-48 bg-gray-200 paper-border-dashed mb-4 overflow-hidden">
                     <img src="https://placehold.co/300x400/2D2A26/ffffff?text=Fauzul" alt="Fauzul" class="w-full h-full object-cover grayscale">
                 </div>
-                <h3 class="font-hand text-4xl font-bold text-dark text-center">Fauzul Fikram</h3>
+                <h3 class="font-hand text-4xl font-bold text-dark text-center">Rani Safitri</h3>
                 <p class="text-center text-sm font-bold text-primary mt-1">Anak dari Bpk. Fulan dan Ibu Fulanah</p>
             </div>
 
@@ -207,7 +209,7 @@
                 <div class="h-48 bg-gray-200 paper-border-dashed mb-4 overflow-hidden mt-2">
                     <img src="https://placehold.co/300x400/D97757/ffffff?text=Rani" alt="Rani" class="w-full h-full object-cover grayscale">
                 </div>
-                <h3 class="font-hand text-4xl font-bold text-dark text-center">Rani Safitri</h3>
+                <h3 class="font-hand text-4xl font-bold text-dark text-center">Fauzul Fikram</h3>
                 <p class="text-center text-sm font-bold text-secondary mt-1">Anak dari Bpk. Fulan dan Ibu Fulanah</p>
             </div>
         </section>
@@ -276,6 +278,54 @@
             </div>
         </section>
 
+        <!-- Adab Walimah -->
+        <section id="adab" class="px-6 py-12 bg-paper relative z-10 border-b-2 border-dashed border-dark">
+            <div class="text-center mb-8 reveal">
+                <h2 class="font-hand text-4xl font-bold bg-white inline-block px-4 py-1 paper-border shadow-paper-sm transform rotate-1">Adab Walimah</h2>
+                <p class="text-sm font-medium mt-4 bg-kraft p-3 paper-border shadow-paper-sm transform -rotate-1">
+                    Tanpa mengurangi rasa hormat, kami memohon agar para tamu undangan berkenan memperhatikan adab-adab berikut:
+                </p>
+            </div>
+
+            <div class="space-y-4 reveal">
+                <!-- Adab 1 -->
+                <div class="bg-white p-4 paper-border shadow-paper-sm transform -rotate-1 relative flex items-start gap-4">
+                    <div class="washi-tape green" style="top: -10px; right: -10px; transform: rotate(45deg); width: 40px;"></div>
+                    <div class="bg-secondary text-white w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 paper-border mt-1">
+                        <i class="fas fa-praying-hands text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-dark mb-1 font-hand text-2xl">Mendoakan Keberkahan</h4>
+                        <p class="text-xs font-medium text-gray-700 leading-relaxed">Mendoakan kebaikan bagi kedua mempelai: "Baarakallahu laka wa baarakaa 'alaika wa jama'a bainakumaa fii khoir."</p>
+                    </div>
+                </div>
+
+                <!-- Adab 2 -->
+                <div class="bg-white p-4 paper-border shadow-paper-sm transform rotate-1 relative flex items-start gap-4">
+                    <div class="paper-pin" style="top: 8px; left: 8px;"></div>
+                    <div class="bg-primary text-white w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 paper-border mt-1 ml-2">
+                        <i class="fas fa-tshirt text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-dark mb-1 font-hand text-2xl">Berpakaian Sopan</h4>
+                        <p class="text-xs font-medium text-gray-700 leading-relaxed">Mengenakan pakaian yang sopan, rapi, dan menutup aurat sesuai dengan syariat Islam.</p>
+                    </div>
+                </div>
+
+                <!-- Adab 3 -->
+                <div class="bg-white p-4 paper-border shadow-paper-sm transform -rotate-1 relative flex items-start gap-4">
+                     <div class="washi-tape pink" style="bottom: -10px; right: 20px; transform: rotate(-5deg); width: 50px;"></div>
+                    <div class="bg-accent text-dark w-10 h-10 flex items-center justify-center rounded-full flex-shrink-0 paper-border mt-1">
+                        <i class="fas fa-utensils text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-dark mb-1 font-hand text-2xl">Makan & Minum</h4>
+                        <p class="text-xs font-medium text-gray-700 leading-relaxed">Mengambil hidangan secukupnya, serta makan dan minum menggunakan tangan kanan dalam posisi duduk.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Amplop Digital -->
         <section id="gift" class="px-6 py-12 relative bg-kraft">
             <div class="washi-tape pink" style="top: -10px; left: 10px;"></div>
@@ -333,7 +383,7 @@
             <div id="daftar-ucapan" class="space-y-4 max-h-80 overflow-y-auto p-2 reveal">
                 <div class="bg-kraft p-3 paper-border-dashed transform rotate-1">
                     <p class="font-bold text-sm">Mz Digital <span class="text-xs font-normal text-gray-600 bg-white px-1 ml-1 border border-dark">Hadir</span></p>
-                    <p class="text-sm mt-1">Selamat menempuh hidup baru Fauzul dan Rani. Semoga menjadi keluarga yang Sakinah, Mawaddah, Warahmah. Amin!</p>
+                    <p class="text-sm mt-1">Selamat menempuh hidup baru Rani dan Fauzul. Semoga menjadi keluarga yang Sakinah, Mawaddah, Warahmah. Amin!</p>
                 </div>
             </div>
         </section>
@@ -342,7 +392,7 @@
         <footer class="text-center py-10 bg-dark text-paper border-t-4 border-dashed border-paper/50">
             <h2 class="font-hand text-4xl mb-2">Terima Kasih</h2>
             <p class="text-sm font-medium mb-6">Atas doa & restu Bapak/Ibu/Saudara/i</p>
-            <p class="font-hand text-2xl text-accent">Fauzul & Rani</p>
+            <p class="font-hand text-2xl text-accent">Rani & Fauzul</p>
             
             <div class="mt-8 pt-4 border-t border-paper/20">
                 <p class="text-xs font-medium">Desain Undangan Digital oleh</p>
@@ -542,7 +592,7 @@
             for (var i = 0; i < reveals.length; i++) {
                 var windowHeight = window.innerHeight;
                 var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100; // Trigger threshold
+                var elementVisible = 50; // Mengurangi threshold dari 100 menjadi 50 agar animasi muncul lebih awal
 
                 if (elementTop < windowHeight - elementVisible) {
                     reveals[i].classList.add("active");
